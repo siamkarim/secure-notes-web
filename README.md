@@ -3,7 +3,7 @@
 Frontend for the [Secure Notes API](https://github.com/siamkarim/secure-notes-api). It is intentionally plain: the task is about the backend, so this app only exists to exercise every endpoint.
 
 - **Stack:** React, TypeScript, Vite, React Router. No UI library and no starter template; every file is written by hand.
-- **Live site:** _add the Vercel URL here_
+- **Live site:** https://secure-notes-web-three.vercel.app
 
 ## Run it locally
 
