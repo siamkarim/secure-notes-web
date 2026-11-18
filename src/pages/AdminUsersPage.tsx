@@ -4,7 +4,7 @@ import { api } from '../api/client';
 import type { Role, User } from '../api/types';
 import { useAuth } from '../auth/AuthContext';
 import { usePagedList } from '../api/usePagedList';
-import { ErrorText, ListFooter, parseInterests, useSubmit } from '../components/ui';
+import { Chips, ErrorText, PageHeader, Pager, parseInterests, RoleBadge, useSubmit } from '../components/ui';
 
 export function AdminUsersPage() {
   const { user: me } = useAuth();
@@ -18,15 +18,15 @@ export function AdminUsersPage() {
       method: 'POST',
       body: { ...form, interests: parseInterests(form.interests) },
     });
-    list.setItems((old) => [user, ...old]);
+    list.first();
     setForm({ name: '', email: '', password: '', role: 'user', interests: '' });
   });
 
   return (
     <main>
-      <h1>Manage users</h1>
+      <PageHeader title="Manage users" subtitle="Add, update and remove accounts." />
 
-      <form onSubmit={addUser} className="card grid-form">
+      <form onSubmit={addUser} className="card card-form grid-form">
         <h3>Add user</h3>
         <input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
         <input placeholder="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
@@ -64,7 +64,7 @@ export function AdminUsersPage() {
                   user={u}
                   isSelf={u._id === me?._id}
                   onEdit={() => setEditingId(u._id)}
-                  onDeleted={() => list.setItems((old) => old.filter((x) => x._id !== u._id))}
+                  onDeleted={list.refresh}
                 />
               ),
             )}
@@ -72,7 +72,7 @@ export function AdminUsersPage() {
         </table>
       </div>
 
-      <ListFooter {...list} empty={list.items.length === 0} onMore={list.loadMore} />
+      <Pager list={list} emptyText="No users found." />
     </main>
   );
 }
@@ -89,10 +89,10 @@ function ViewRow(props: { user: User; isSelf: boolean; onEdit: () => void; onDel
 
   return (
     <tr>
-      <td>{user.name}{props.isSelf && ' (you)'}</td>
+      <td className="strong">{user.name}{props.isSelf && <span className="muted"> (you)</span>}</td>
       <td>{user.email}</td>
-      <td>{user.role}</td>
-      <td>{user.interests.join(', ')}</td>
+      <td><RoleBadge role={user.role} /></td>
+      <td><Chips values={user.interests} /></td>
       <td>
         <div className="row">
           <button onClick={props.onEdit}>Edit</button>

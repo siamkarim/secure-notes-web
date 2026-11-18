@@ -4,7 +4,7 @@ import { api } from '../api/client';
 import type { Page, Post } from '../api/types';
 import { useAuth } from '../auth/AuthContext';
 import { usePagedList } from '../api/usePagedList';
-import { ErrorText, formatDate, ListFooter, useSubmit } from '../components/ui';
+import { ErrorText, formatDate, PageHeader, Pager, useSubmit } from '../components/ui';
 
 /** Posts of one user. Without an :id in the URL it shows (and lets you add to) your own. */
 export function PostsPage() {
@@ -29,18 +29,21 @@ export function PostsPage() {
 
   const addPost = create.run(async () => {
     const { post } = await api<{ post: Post }>('/posts', { method: 'POST', body: { title, body } });
-    list.setItems((old) => [post, ...old]);
+    list.first();
     setTitle('');
     setBody('');
   });
 
   return (
     <main>
-      <h1>{isMine ? 'My posts' : `Posts by ${authorName || '…'}`}</h1>
-      <p className="muted">Posts are public: everyone can read them.</p>
+      <PageHeader
+        title={isMine ? 'My posts' : `Posts by ${authorName || '…'}`}
+        subtitle="Posts are public: everyone can read them."
+      />
 
       {isMine && (
-        <form onSubmit={addPost} className="stack card">
+        <form onSubmit={addPost} className="stack card card-form">
+          <h3>New post</h3>
           <input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required maxLength={200} />
           <textarea placeholder="Share something…" value={body} onChange={(e) => setBody(e.target.value)} rows={3} required maxLength={10000} />
           <ErrorText>{create.error}</ErrorText>
@@ -52,11 +55,11 @@ export function PostsPage() {
         <article key={post._id} className="card">
           <h3>{post.title}</h3>
           <p className="pre">{post.body}</p>
-          <p className="muted">{formatDate(post.createdAt)}</p>
+          <div className="card-footer"><span className="muted">{formatDate(post.createdAt)}</span></div>
         </article>
       ))}
 
-      <ListFooter {...list} empty={list.items.length === 0} onMore={list.loadMore} />
+      <Pager list={list} emptyText="No posts yet." />
     </main>
   );
 }

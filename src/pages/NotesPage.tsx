@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { api } from '../api/client';
 import type { Note } from '../api/types';
 import { usePagedList } from '../api/usePagedList';
-import { ErrorText, formatDate, ListFooter, useSubmit } from '../components/ui';
+import { ErrorText, formatDate, PageHeader, Pager, useSubmit } from '../components/ui';
 
 export function NotesPage() {
   const list = usePagedList<Note>('/notes');
@@ -12,16 +12,17 @@ export function NotesPage() {
 
   const addNote = create.run(async () => {
     const { note } = await api<{ note: Note }>('/notes', { method: 'POST', body: { title, body } });
-    list.setItems((old) => [note, ...old]);
+    list.first(); // the new note is the newest, so it is on page 1
     setTitle('');
     setBody('');
   });
 
   return (
     <main>
-      <h1>My notes</h1>
+      <PageHeader title="My notes" subtitle="Private to you. Newest first." />
 
-      <form onSubmit={addNote} className="stack card">
+      <form onSubmit={addNote} className="stack card card-form">
+        <h3>New note</h3>
         <input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required maxLength={200} />
         <textarea placeholder="Write something…" value={body} onChange={(e) => setBody(e.target.value)} rows={3} maxLength={10000} />
         <ErrorText>{create.error}</ErrorText>
@@ -33,11 +34,11 @@ export function NotesPage() {
           key={note._id}
           note={note}
           onSaved={(saved) => list.setItems((old) => old.map((n) => (n._id === saved._id ? saved : n)))}
-          onDeleted={() => list.setItems((old) => old.filter((n) => n._id !== note._id))}
+          onDeleted={list.refresh}
         />
       ))}
 
-      <ListFooter {...list} empty={list.items.length === 0} onMore={list.loadMore} />
+      <Pager list={list} emptyText="You have no notes yet. Add your first one above." />
     </main>
   );
 }
@@ -79,11 +80,13 @@ function NoteCard(props: { note: Note; onSaved: (note: Note) => void; onDeleted:
     <article className="card">
       <h3>{note.title}</h3>
       {note.body && <p className="pre">{note.body}</p>}
-      <p className="muted">Created {formatDate(note.createdAt)}</p>
       <ErrorText>{action.error}</ErrorText>
-      <div className="row">
-        <button onClick={() => setEditing(true)}>Edit</button>
-        <button onClick={() => void remove()} disabled={action.busy} className="danger">Delete</button>
+      <div className="card-footer">
+        <span className="muted">Created {formatDate(note.createdAt)}</span>
+        <div className="row">
+          <button onClick={() => setEditing(true)}>Edit</button>
+          <button onClick={() => void remove()} disabled={action.busy} className="danger">Delete</button>
+        </div>
       </div>
     </article>
   );

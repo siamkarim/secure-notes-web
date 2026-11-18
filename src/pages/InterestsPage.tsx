@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import type { InterestGroup } from '../api/types';
 import { usePagedList } from '../api/usePagedList';
-import { ListFooter } from '../components/ui';
+import { PageHeader, Pager } from '../components/ui';
 
 /** Users grouped by interest (the single-aggregate() endpoint), paged by interest name. */
 export function InterestsPage() {
@@ -18,9 +18,9 @@ export function InterestsPage() {
 
   return (
     <main>
-      <h1>Users by interest</h1>
+      <PageHeader title="Users by interest" subtitle="Everyone grouped under each interest they list, A to Z." />
 
-      <form onSubmit={applyFilter} className="row">
+      <form onSubmit={applyFilter} className="row toolbar">
         <input placeholder="Show one interest, e.g. chess" value={input} onChange={(e) => setInput(e.target.value)} maxLength={40} />
         <button type="submit">Filter</button>
         {filter && (
@@ -32,13 +32,14 @@ export function InterestsPage() {
 
       {list.items.map((group) => (
         <section key={group.interest} className="card">
-          <h3>
-            {group.interest} <span className="muted">({group.count} {group.count === 1 ? 'user' : 'users'})</span>
+          <h3 className="group-title">
+            {group.interest}
+            <span className="badge">{group.count} {group.count === 1 ? 'user' : 'users'}</span>
           </h3>
           <ul className="inline-list">
             {group.users.map((u) => (
               <li key={u._id}>
-                <Link to={`/users/${u._id}/posts`}>{u.name}</Link>
+                <Link to={`/users/${u._id}/posts`} className="chip chip-link">{u.name}</Link>
               </li>
             ))}
           </ul>
@@ -48,7 +49,7 @@ export function InterestsPage() {
         </section>
       ))}
 
-      <ListFooter {...list} empty={list.items.length === 0} onMore={list.loadMore} />
+      <Pager list={list} emptyText="No users have this interest." />
     </main>
   );
 }
