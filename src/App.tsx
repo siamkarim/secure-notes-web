@@ -1,5 +1,6 @@
 import { Navigate, NavLink, Outlet, Route, Routes } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext';
+import { RoleBadge } from './components/ui';
 import { AuthPage } from './pages/AuthPage';
 import { NotesPage } from './pages/NotesPage';
 import { ProfilePage } from './pages/ProfilePage';
@@ -27,6 +28,8 @@ function Header() {
 
   return (
     <header>
+      <div className="header-inner">
+      <span className="brand">Secure Notes</span>
       <nav>
         <NavLink to="/notes">Notes</NavLink>
         <NavLink to="/posts">Posts</NavLink>
@@ -39,9 +42,12 @@ function Header() {
           </>
         )}
       </nav>
-      <div className="row">
-        <span className="muted">{user.name} ({user.role})</span>
+      <div className="row user-menu">
+        <span className="avatar" aria-hidden="true">{user.name.charAt(0).toUpperCase()}</span>
+        <span className="user-name">{user.name}</span>
+        <RoleBadge role={user.role} />
         <button onClick={() => void logout()}>Log out</button>
+      </div>
       </div>
     </header>
   );

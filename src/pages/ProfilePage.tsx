@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { api, setAccessToken } from '../api/client';
 import type { User } from '../api/types';
 import { useAuth } from '../auth/AuthContext';
-import { ErrorText, parseInterests, useSubmit } from '../components/ui';
+import { ErrorText, PageHeader, parseInterests, RoleBadge, useSubmit } from '../components/ui';
 
 type UpdateResponse = { user: User; accessToken?: string };
 
@@ -44,11 +44,11 @@ export function ProfilePage() {
 
   return (
     <main className="narrow">
-      <h1>My profile</h1>
-      <p className="muted">{user.email} · role: {user.role}</p>
+      <PageHeader title="My profile" subtitle={<>{user.email} <RoleBadge role={user.role} /></>} />
       {saved && <p className="success">{saved}</p>}
 
       <form onSubmit={saveProfile} className="stack card">
+        <h3>Details</h3>
         <label>
           Name
           <input value={name} onChange={(e) => setName(e.target.value)} required maxLength={100} />

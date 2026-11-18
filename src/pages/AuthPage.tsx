@@ -19,8 +19,11 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
   });
 
   return (
-    <main className="narrow">
-      <h1>{isRegister ? 'Create account' : 'Log in'}</h1>
+    <main className="auth">
+      <div className="auth-card">
+        <p className="brand">Secure Notes</p>
+        <h1>{isRegister ? 'Create your account' : 'Welcome back'}</h1>
+        <p className="muted">{isRegister ? 'Start writing private notes in seconds.' : 'Log in to see your notes.'}</p>
       <form onSubmit={submit} className="stack">
         {isRegister && (
           <label>
@@ -50,13 +53,14 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
           {busy ? 'Please wait…' : isRegister ? 'Register' : 'Log in'}
         </button>
       </form>
-      <p>
+      <p className="auth-switch">
         {isRegister ? (
           <>Already have an account? <Link to="/login">Log in</Link></>
         ) : (
           <>No account yet? <Link to="/register">Register</Link></>
         )}
       </p>
+      </div>
     </main>
   );
 }
