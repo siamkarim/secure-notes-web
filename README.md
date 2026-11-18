@@ -28,7 +28,7 @@ The dev server forwards `/api/*` to `http://localhost:4000`. To use another back
 | Users | admin | `GET/POST /admin/users`, `PATCH/DELETE /admin/users/:id` |
 | All notes | admin | `GET /admin/notes` |
 
-Every list has a "Load more" button that sends the `nextCursor` from the previous page.
+Every list has **Previous / Next** controls and a rows-per-page selector. The API pages with a cursor, so the client remembers the cursor that started each visited page; "Previous" re-requests the earlier page with its remembered cursor ([`src/api/usePagedList.ts`](src/api/usePagedList.ts)).
 
 ## How authentication works here
 
