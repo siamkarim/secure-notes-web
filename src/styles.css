@@ -189,6 +189,24 @@ input:focus, textarea:focus, select:focus, button:focus-visible, a:focus-visible
   box-shadow: var(--focus);
 }
 
+.password-field { position: relative; display: block; }
+.password-field input { padding-right: 42px; }
+button.icon-button {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+}
+button.icon-button:hover:not(:disabled) { background: var(--surface-2); color: var(--text); }
+td .password-field { margin-bottom: 6px; }
+td .password-field input { margin-bottom: 0; }
+
 /* ---- Buttons ------------------------------------------------------------- */
 button {
   font: inherit;

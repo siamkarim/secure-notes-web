@@ -4,7 +4,7 @@ import { api } from '../api/client';
 import type { Role, User } from '../api/types';
 import { useAuth } from '../auth/AuthContext';
 import { usePagedList } from '../api/usePagedList';
-import { Chips, ErrorText, PageHeader, Pager, parseInterests, RoleBadge, useSubmit } from '../components/ui';
+import { Chips, ErrorText, PageHeader, Pager, parseInterests, PasswordInput, RoleBadge, useSubmit } from '../components/ui';
 
 export function AdminUsersPage() {
   const { user: me } = useAuth();
@@ -30,7 +30,7 @@ export function AdminUsersPage() {
         <h3>Add user</h3>
         <input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
         <input placeholder="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
-        <input placeholder="Password (min 8)" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required minLength={8} autoComplete="new-password" />
+        <PasswordInput placeholder="Password (min 8)" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required minLength={8} autoComplete="new-password" />
         <input placeholder="Interests (comma separated)" value={form.interests} onChange={(e) => setForm({ ...form, interests: e.target.value })} />
         <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value as Role })} aria-label="Role">
           <option value="user">user</option>
@@ -144,7 +144,7 @@ function EditRow(props: { user: User; isSelf: boolean; onCancel: () => void; onS
       </td>
       <td><input value={interests} onChange={(e) => setInterests(e.target.value)} aria-label="Interests" /></td>
       <td>
-        <input type="password" placeholder="New password (optional)" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
+        <PasswordInput placeholder="New password (optional)" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
         <div className="row">
           <button onClick={() => void save()} disabled={action.busy}>Save</button>
           <button onClick={props.onCancel}>Cancel</button>

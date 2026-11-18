@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from 'react';
+import { useState, type FormEvent, type InputHTMLAttributes, type ReactNode } from 'react';
 import type { PagedList } from '../api/usePagedList';
 import type { Role } from '../api/types';
 
@@ -25,6 +25,32 @@ export function Chips({ values }: { values: string[] }) {
   return (
     <span className="chips">
       {values.map((v) => <span key={v} className="chip">{v}</span>)}
+    </span>
+  );
+}
+
+/** Password field with a show / hide toggle. Accepts the same props as <input>. */
+export function PasswordInput(props: Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>) {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <span className="password-field">
+      <input {...props} type={visible ? 'text' : 'password'} />
+      <button
+        type="button"
+        className="icon-button"
+        onClick={() => setVisible((v) => !v)}
+        aria-label={visible ? 'Hide password' : 'Show password'}
+        aria-pressed={visible}
+        title={visible ? 'Hide password' : 'Show password'}
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+          <circle cx="12" cy="12" r="3" />
+          {/* A slash through the eye while the password is visible */}
+          {visible && <path d="M4 4l16 16" />}
+        </svg>
+      </button>
     </span>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
-import { ErrorText, useSubmit } from '../components/ui';
+import { ErrorText, PasswordInput, useSubmit } from '../components/ui';
 
 export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
   const { login, register } = useAuth();
@@ -37,8 +37,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
         </label>
         <label>
           Password
-          <input
-            type="password"
+          <PasswordInput
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

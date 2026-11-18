@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { api, setAccessToken } from '../api/client';
 import type { User } from '../api/types';
 import { useAuth } from '../auth/AuthContext';
-import { ErrorText, PageHeader, parseInterests, RoleBadge, useSubmit } from '../components/ui';
+import { ErrorText, PageHeader, parseInterests, PasswordInput, RoleBadge, useSubmit } from '../components/ui';
 
 type UpdateResponse = { user: User; accessToken?: string };
 
@@ -65,11 +65,11 @@ export function ProfilePage() {
         <h3>Change password</h3>
         <label>
           Current password
-          <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required autoComplete="current-password" />
+          <PasswordInput value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required autoComplete="current-password" />
         </label>
         <label>
           New password
-          <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required minLength={8} maxLength={128} autoComplete="new-password" />
+          <PasswordInput value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required minLength={8} maxLength={128} autoComplete="new-password" />
         </label>
         <ErrorText>{passwordForm.error}</ErrorText>
         <button type="submit" disabled={passwordForm.busy}>Change password</button>
